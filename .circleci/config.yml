@@ -33,10 +33,12 @@ jobs:
             echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
       - run:
           name: Pushing new image version
+          command: |
             docker tag $CIRCLE_PROJECT_REPONAME:$CIRCLE_BUILD_NUM $DOCKER_HUB_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BUILD_NUM
             docker push $DOCKER_HUB_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BUILD_NUM
       - run:
           name: Pushing latest version
+          command: |
             docker tag $CIRCLE_PROJECT_REPONAME:$CIRCLE_BUILD_NUM $DOCKER_HUB_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
             docker push $DOCKER_HUB_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
       
