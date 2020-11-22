@@ -4,9 +4,9 @@ workflows:
   version: 2
   project_cicd:
     jobs:
-      build:
-        context:
-          - docker-hub
+      - build:
+          context:
+            - docker-hub
 
 jobs:
   build:
