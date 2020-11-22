@@ -5,4 +5,4 @@ RUN pip install -r requirements.txt
 COPY app.py /app/
 ENV FLASK_APP=app.py
 ENV PORT=80
-CMD flask run -p $PORT
+CMD flask run -p $PORT -h 0.0.0.0
