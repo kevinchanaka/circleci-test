@@ -11,34 +11,15 @@ workflows:
 jobs:
   build:
     docker:
-      - image: cimg/base:stable
+      - image: jdrouet/docker-with-buildx:stable
     steps:
       - setup_remote_docker:
           version: 19.03.13
       - checkout
-      - run:
-          name: The First Step
-          command: |
-            echo 'Hello World!'
-            echo 'This is the delivery pipeline'
-      - run:
-          name: Code Has Arrived
-          command: |
-            ls -al
-            echo '^^^That should look familiar^^^'
-      - run:
+      - run: 
           name: Building image
           command: |
-            docker build -t $CIRCLE_PROJECT_REPONAME:$CIRCLE_BUILD_NUM .
             echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
-      - run:
-          name: Pushing new image version
-          command: |
-            docker tag $CIRCLE_PROJECT_REPONAME:$CIRCLE_BUILD_NUM $DOCKER_HUB_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BUILD_NUM
-            docker push $DOCKER_HUB_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BUILD_NUM
-      - run:
-          name: Pushing latest version
-          command: |
-            docker tag $CIRCLE_PROJECT_REPONAME:$CIRCLE_BUILD_NUM $DOCKER_HUB_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
-            docker push $DOCKER_HUB_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
-      
+            docker buildx build --push \
+              --platform linux/arm/v7,linux/arm64/v8,linux/amd64 \
+              --tag $DOCKER_HUB_USERNAME/multiarch-example:buildx-latest .
